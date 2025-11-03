@@ -24,18 +24,18 @@ load_dotenv(dotenv_path="./.env")
 #    "measurementId": "G-..." # For Firebase JS SDK v7.20.0...
 #
 firebase_config = {
-  "apiKey": os.environ.get("FIREBASE_API_KEY"),
-  "authDomain": os.environ.get("FIREBASE_AUTH_DOMAINY"),
-  "projectId": os.environ.get("PROJECT_ID"),
-  "messagingSenderId": os.environ.get("MESSAGING_SENDER_ID"),
-  "storageBucket": os.environ.get("STORAGE_BUCKET"),
-  "appId": os.environ.get("APP_ID"),
-  "measurementId": os.environ.get("MEASUREMENT_ID"), # For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  
+  "apiKey": os.getenv("FIREBASE_API_KEY"),
+  "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+  "projectId": os.getenv("PROJECT_ID"),
+  "messagingSenderId": os.getenv("MESSAGING_SENDER_ID"),
+  "storageBucket": os.getenv("STORAGE_BUCKET"),
+  "appId": os.getenv("APP_ID"),
+  "measurementId": os.getenv("MEASUREMENT_ID"), # For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
   # --- FIX ADDED HERE ---
   # Pyrebase requires the databaseURL, even if only using Auth.
   # This is typically your projectID + "-default-rtdb.firebaseio.com"
-  "databaseURL": os.environ.get("DATABASE_URL")
+  "databaseURL": os.getenv("DATABASE_URL")
 }
 
 # --- Initialize Firebase ---
@@ -45,7 +45,7 @@ def init_firebase():
     try:
         # Check if all required config keys are filled
         if not all(firebase_config.get(key) not in [None, "", "YOUR_API_KEY"] for key in ["apiKey", "authDomain", "projectId"]):
-            st.error("Firebase configuration is incomplete. Please fill in `firebase_config` in 1_Home.py.")
+            st.error("Firebase configuration is incomplete. Please fill in `firebase_config` in main.py.")
             return None
         firebase = pyrebase.initialize_app(firebase_config)
         return firebase.auth()

@@ -1,162 +1,308 @@
-# DeepSeek RAG Application
+# CRAG - Contextual Retrieval-Augmented Generation
 
-![image](https://github.com/user-attachments/assets/902c1a05-f00e-4f07-b584-6f5311713e71)
+![CRAG Logo](https://github.com/user-attachments/assets/902c1a05-f00e-4f07-b584-6f5311713e71)
 
-With the emergence of DeepSeek R1, an efficient and cost-effective open-source model, building an optimized RAG system has become more accessible than ever. 
-Retrieval-Augmented Generation (RAG) and Graph RAG have transformed the way AI systems interact with data. By combining powerful retrieval mechanisms with generative AI, RAG models deliver more accurate and contextually aware responses.
-
-DeepSeek RAG is an innovative Retrieval-Augmented Generation (RAG) system that extracts information from PDF documents and provides precise answers to user queries by leveraging advanced language models. This project integrates powerful tools such as pdfplumber, FAISS, and Sentence Transformers with the state-of-the-art Groq API, which calls upon the DeepSeek R1 70B Distill model—one of the most advanced LLMs available today.
+CRAG is a powerful document analysis tool that combines Retrieval-Augmented Generation (RAG) with modern web technologies to enable intelligent conversations with your PDF documents. Built with Streamlit and powered by state-of-the-art AI models, CRAG provides a secure, user-friendly interface for document Q&A.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Why DeepSeek RAG?](#why-deepseek-rag)
 - [Features](#features)
 - [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
 - [Installation](#installation)
+- [Configuration](#configuration)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
+- [API Configuration](#api-configuration)
 - [Contributing](#contributing)
 
 ---
 
 ## Overview
 
-DeepSeek RAG is designed to handle complex queries by:
-- **Extracting Text from PDFs:** Using [pdfplumber](https://github.com/jsvine/pdfplumber) to extract textual data.
-- **Chunking and Indexing:** Dividing the text into manageable chunks and indexing them using [FAISS](https://github.com/facebookresearch/faiss) for efficient similarity search.
-- **Retrieving Contextual Information:** Utilizing [Sentence Transformers](https://www.sbert.net/) to create embeddings and retrieve the most relevant chunks based on user queries.
-- **Answer Generation:** Leveraging the Groq API to call upon the **DeepSeek R1 Distill** model for generating high-quality answers.
-
----
-
-## Why DeepSeek RAG?
-
-### Superior Model Performance
-- **State-of-the-Art LLM:** DeepSeek R1 Distill is a top-notch open source model known for its robust performance in understanding and generating human-like text.
-- **Optimized for Accuracy:** With its advanced architecture, DeepSeek R1 Distill outperforms many other models in delivering precise and contextually relevant responses.
-
-### Enhanced Retrieval Capabilities
-- **Contextual Awareness:** By combining retrieval methods with generation capabilities, DeepSeek RAG ensures that responses are grounded in the actual content of the source documents.
-- **Efficient Query Handling:** The integration of FAISS and Sentence Transformers ensures that even large PDF documents can be processed quickly and accurately.
-
-### Groq API Integration
-- **Cutting-Edge Technology:** The Groq API provides a robust and scalable interface for accessing deep learning models, making it easier to integrate and deploy advanced LLMs in production.
-- **Flexibility and Scalability:** With the Groq API, this project can easily scale to handle larger datasets and more complex queries, ensuring a seamless user experience.
+CRAG transforms how you interact with PDF documents by:
+- **Secure Authentication:** Firebase-based user authentication system
+- **Intelligent PDF Processing:** Extracting and chunking text for optimal retrieval
+- **Vector Search:** Using FAISS for fast similarity search across document chunks
+- **AI-Powered Q&A:** Leveraging Groq's llama-3.3-70b-versatile model for accurate answers
+- **Session Management:** Tracking conversation history with export capabilities
+- **Multi-Page Interface:** Clean, intuitive Streamlit web application
 
 ---
 
 ## Features
 
-- **PDF Text Extraction:** Accurately extracts text from PDF documents using pdfplumber.
-- **Intelligent Chunking:** Splits long texts into manageable chunks for better context retrieval.
-- **Semantic Search:** Employs FAISS and Sentence Transformers to find the most relevant content based on the query.
-- **High-Quality Answer Generation:** Uses the DeepSeek R1 Distill model via the Groq API for generating insightful answers.
-- **Interactive Web UI:** A user-friendly Gradio interface allows users to upload PDFs, ask questions, and view answers interactively.
-- **Customizable UI:** With integrated custom CSS and layout enhancements, the UI is both visually appealing and easy to use.
+### 🔐 **Secure Authentication**
+- Firebase Authentication integration
+- Email/password registration and login
+- Session management and user state persistence
+
+### 📄 **PDF Processing**
+- Upload and process PDF documents
+- Intelligent text extraction using PDFPlumber
+- Automatic text chunking with configurable overlap
+- FAISS indexing for efficient similarity search
+
+### 🤖 **AI-Powered Chat**
+- Real-time streaming responses
+- Context-aware answers based on document content
+- Groq API integration with llama-3.3-70b-versatile model
+- Retrieval of most relevant document sections
+
+### 📊 **History Management**
+- Complete session query history
+- CSV export functionality
+- Persistent conversation tracking
+
+### 🎨 **Modern UI**
+- Responsive Streamlit interface
+- Dark theme with custom styling
+- Multi-page application structure
+- Real-time chat interface
 
 ---
 
 ## Architecture
 
-1. **PDF Extraction:**  
-   The system uses `pdfplumber` to read and extract text from PDF files.
+```
+User Upload PDF → Text Extraction → Chunking → Embedding → FAISS Index
+                                                              ↓
+User Query → Query Embedding → Similarity Search → Context Retrieval
+                                                              ↓
+Context + Query → Groq API → llama-3.3-70b-versatile → Streaming Response
+```
 
-2. **Text Processing and Chunking:**  
-   Extracted text is divided into smaller, manageable chunks to preserve context and improve retrieval accuracy.
+### **Processing Pipeline:**
 
-3. **Embedding and Indexing:**  
-   Chunks are encoded using the Sentence Transformers model and indexed with FAISS for fast similarity search.
-
-4. **Retrieval:**  
-   User queries are encoded and matched against the indexed chunks to retrieve the most relevant pieces of text.
-
-5. **Answer Generation:**  
-   The retrieved context is fed into the Groq API, which calls the DeepSeek R1 Distill model to generate a high-quality answer.
-
-6. **User Interface:**  
-   An interactive Gradio UI provides an easy way for users to interact with the system—uploading PDFs and asking queries directly through the web interface.
+1. **Authentication:** Firebase handles user registration and login
+2. **PDF Processing:** PDFPlumber extracts text from uploaded documents
+3. **Text Chunking:** Content is split into overlapping segments (700 chars with 100 char overlap)
+4. **Embedding Generation:** SentenceTransformers creates vector embeddings
+5. **Indexing:** FAISS creates searchable index for fast retrieval
+6. **Query Processing:** User questions are embedded and matched against document chunks
+7. **Answer Generation:** Groq API generates contextual responses using retrieved content
 
 ---
 
-![image](https://github.com/user-attachments/assets/52abe65b-16ca-4994-b527-ec8282e6ef5d)
+## Technology Stack
 
+### **Core Technologies:**
+- **Frontend:** Streamlit 1.28.0+
+- **Authentication:** Firebase (Pyrebase4)
+- **Vector Search:** FAISS (CPU version)
+- **Embeddings:** SentenceTransformers (all-MiniLM-L6-v2)
+- **LLM API:** Groq (llama-3.3-70b-versatile)
+- **PDF Processing:** PDFPlumber
+- **Environment Management:** python-dotenv
+
+### **Development Tools:**
+- **Testing:** pytest
+- **Code Formatting:** black
+- **Linting:** flake8
+- **Build System:** hatchling
 
 ---
 
 ## Installation
 
 ### Prerequisites
+- Python 3.8 or higher
+- pip or uv package manager
 
-- Python 3.7+
-- pip
+### Install Dependencies
 
-### Required Packages
+Using pip:
+```bash
+pip install -e .
+```
 
-Install the necessary Python packages with:
+Using uv:
+```bash
+uv pip install -e .
+```
+
+Or install from requirements:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Configuration
+
+### 1. Environment Variables
+
+Create a `.env` file in the project root:
 
 ```bash
-pip install pdfplumber faiss-cpu sentence-transformers groq gradio
+# Firebase Configuration
+FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+PROJECT_ID=your_project_id
+MESSAGING_SENDER_ID=your_sender_id
+STORAGE_BUCKET=your_project_id.appspot.com
+APP_ID=your_app_id
+MEASUREMENT_ID=your_measurement_id
+DATABASE_URL=https://your_project_id-default-rtdb.firebaseio.com/
+
+# Groq API Configuration
+GROQ_API_KEY=your_groq_api_key
 ```
+
+### 2. Firebase Setup
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project or select existing one
+3. Enable Authentication → Sign-in method → Email/Password
+4. Get your config from Project Settings → General → Web apps
+5. Add the configuration values to your `.env` file
+
+### 3. Groq API Setup
+
+1. Visit [Groq Console](https://console.groq.com/)
+2. Create an account and generate an API key
+3. Add the API key to your `.env` file
 
 ---
 
 ## Usage
 
-1. **Clone the Repository:**
+### 1. Start the Application
 
-   ```bash
-   git clone https://github.com/yourusername/deepseek-rag.git
-   cd deepseek-rag
-   ```
+```bash
+streamlit run main.py
+```
 
-2. **Configure the Groq API Key:**
+### 2. Access the Application
 
-   In your code, replace the placeholder API key with your actual Groq API key:
+Open your browser and navigate to `http://localhost:8501`
 
-   ```python
-   client = Groq(api_key='YOUR_GROQ_API_KEY')
-   ```
+### 3. Using CRAG
 
-3. **Run the Application:**
-
-   Execute the script to start the Gradio web UI:
-
-   ```bash
-   python your_script.py
-   ```
-
-4. **Interact via Web UI:**
-
-   - Upload your PDF using the provided file uploader.
-   - Enter your query in the text box.
-   - Click "Get Answer" to retrieve the response generated by the DeepSeek R1 Distill model.
+1. **Login/Register:** Create an account or login with existing credentials
+2. **Upload PDF:** Go to the CRAG App page and upload your PDF document
+3. **Process Document:** Click "Process PDF" and wait for indexing to complete
+4. **Ask Questions:** Use the chat interface to ask questions about your document
+5. **View History:** Check the History page to see all your queries and export as CSV
 
 ---
 
 ## Project Structure
 
 ```
-deepseek-rag/
-│
-├── README.md             # Project documentation
-├── requirements.txt      # Python dependencies
-├── your_script.py        # Main application script (Gradio UI, PDF processing, etc.)
-└── assets/
-    └── header_image.png  # (Optional) Custom header image for the UI
+CRAG/
+├── main.py                 # Main Streamlit app with authentication
+├── rag_backend.py          # Core RAG functionality
+├── pyproject.toml          # Project configuration and dependencies
+├── requirements.txt        # Python dependencies
+├── .env                    # Environment variables (create this)
+├── .gitignore             # Git ignore file
+├── README.md              # This file
+├── uv.lock                # UV lock file
+└── pages/
+    ├── crag_app.py        # Main chat interface
+    ├── history.py         # Query history page
+    └── welcome.html       # Welcome page template
+```
+
+### **File Descriptions:**
+
+- **`main.py`:** Entry point with Firebase authentication and home page
+- **`rag_backend.py`:** Core RAG logic including PDF processing, indexing, and answer generation
+- **`pages/crag_app.py`:** Main application interface for PDF upload and chat
+- **`pages/history.py`:** Session history display and CSV export functionality
+
+---
+
+## API Configuration
+
+### **Model Settings:**
+
+- **Embedding Model:** `sentence-transformers/all-MiniLM-L6-v2`
+- **LLM Model:** `llama-3.3-70b-versatile` (via Groq)
+- **Chunk Size:** 700 characters with 100 character overlap
+- **Top-K Retrieval:** 3 most relevant chunks
+- **Temperature:** 0.2 for consistent responses
+
+### **Customization Options:**
+
+You can modify these parameters in `rag_backend.py`:
+- Chunk size and overlap in `chunk_text()`
+- Number of retrieved chunks in `retrieve_chunks()`
+- Model temperature and parameters in `generate_answer_stream()`
+
+---
+
+## Development
+
+### **Running Tests:**
+```bash
+pytest
+```
+
+### **Code Formatting:**
+```bash
+black .
+```
+
+### **Linting:**
+```bash
+flake8
+```
+
+### **Building Package:**
+```bash
+pip install build
+python -m build
 ```
 
 ---
 
 ## Contributing
 
-Contributions are welcome! If you'd like to improve DeepSeek RAG, please fork the repository and create a pull request with your proposed changes. For major changes, please open an issue first to discuss what you would like to change.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### **Development Guidelines:**
+- Follow PEP 8 style guidelines
+- Add tests for new functionality
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
 
 ---
 
-*DeepSeek RAG leverages state-of-the-art technology to deliver accurate, contextually rich answers by combining efficient retrieval mechanisms with the advanced DeepSeek R1 Distill model. Experience the power of DeepSeek and transform the way you interact with complex documents!*
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-# CRAG
+
+## Troubleshooting
+
+### **Common Issues:**
+
+1. **Firebase Configuration Error:**
+   - Ensure all Firebase environment variables are set correctly
+   - Verify Firebase project has Authentication enabled
+
+2. **Groq API Error:**
+   - Check your Groq API key is valid and has sufficient credits
+   - Verify internet connection for API calls
+
+3. **PDF Processing Error:**
+   - Ensure uploaded file is a valid PDF
+   - Check for password-protected or corrupted PDFs
+
+4. **FAISS Index Error:**
+   - Verify sufficient memory for large documents
+   - Check that sentence-transformers model loads correctly
+
+---
+
+**CRAG empowers you to unlock insights from your documents through intelligent AI-powered conversations. Transform your document analysis workflow today!**

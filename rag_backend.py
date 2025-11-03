@@ -15,7 +15,7 @@ load_dotenv()
 def get_groq_client():
     """Returns a cached Groq client."""
     try:
-        client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
+        client = Groq(api_key=os.getenv('GROQ_API_KEY'))
         return client
     except Exception as e:
         st.error(f"Failed to initialize Groq client: {e}")
